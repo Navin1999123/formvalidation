@@ -1,0 +1,199 @@
+class NewAccount extends StatefulWidget {
+  NewAccount({Key? key}) : super(key: key);
+
+  @override
+  _NewAccountState createState() => _NewAccountState();
+}
+
+class _NewAccountState extends State<NewAccount> {
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  TextEditingController _name = TextEditingController();
+  TextEditingController _email = TextEditingController();
+  TextEditingController _phone = TextEditingController();
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  bool autovalidate = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: SafeArea(
+            child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                color: Color(0xff8ed1c0),
+                child: Form(
+                  key: _formkey,
+                  child: ListView(
+                      // mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Image(
+                          image: AssetImage("assets/registor.png"),
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.3,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 150, left: 20),
+                          child: Text(
+                            "Register",
+                            style: TextStyle(
+                              color: Colors.white60,
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Expanded(
+                            child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.height,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(40)),
+                                  color: Colors.greenAccent,
+                                ),
+                                child: Column(children: [
+                                  Column(children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 60, left: 30, right: 30),
+                                      child: TextFormField(
+                                        autovalidateMode: (autovalidate)
+                                            ? AutovalidateMode.always
+                                            : AutovalidateMode.disabled,
+                                        controller: _name,
+                                        keyboardType: TextInputType.text,
+                                        validator: (String? value) {
+                                          if (value!.isEmpty) {
+                                            return "please enter name";
+                                          }
+                                          return null;
+                                        },
+                                        onSaved: (String? name) {},
+                                        decoration: InputDecoration(
+                                            hintText: "Name",
+                                            hintStyle: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                            border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20))),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 20, left: 30, right: 30),
+                                      child: TextFormField(
+                                        autovalidateMode: (autovalidate)
+                                            ? AutovalidateMode.always
+                                            : AutovalidateMode.disabled,
+                                        controller: _email,
+                                        validator: (String? value) {
+                                          String pattern =
+                                              r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                                          RegExp regex = new RegExp(pattern);
+                                          if (!regex.hasMatch(value ?? ""))
+                                            return 'Enter Valid Email';
+                                          else
+                                            return null;
+                                        },
+                                        onSaved: (String? email) {},
+                                        decoration: InputDecoration(
+                                            hintText: "Email",
+                                            hintStyle: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                            border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20))),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 20, left: 30, right: 30),
+                                      child: TextFormField(
+                                        autovalidateMode: (autovalidate)
+                                            ? AutovalidateMode.always
+                                            : AutovalidateMode.disabled,
+                                        maxLength: 10,
+                                        keyboardType: TextInputType.number,
+                                        controller: _phone,
+                                        validator: (String? value) {
+                                          String patttern =
+                                              r'(^(?:[+0]9)?[0-9]{10,12}$)';
+                                          RegExp regExp = new RegExp(patttern);
+                                          if (value?.length == 0) {
+                                            return 'Please enter mobile number';
+                                          } else if (!regExp
+                                              .hasMatch(value ?? "")) {
+                                            return 'Please enter valid mobile number';
+                                          }
+                                          return null;
+                                        },
+                                        onSaved: (String? phone) {},
+                                        decoration: InputDecoration(
+                                            hintText: "Phone Number",
+                                            hintStyle: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                            border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                borderSide: BorderSide(
+                                                    color: Colors.black))),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(50),
+                                      child: MaterialButton(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        onPressed: () {
+                                          if (_formkey.currentState!
+                                              .validate()) {
+                                            registrationUser();
+                                            print("successful");
+                                            final snackBar = SnackBar(
+                                                content:
+                                                    Text("Login Successful"));
+                                            scaffoldKey.currentState
+                                                ?.showSnackBar(snackBar);
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (_) => Bottom(),
+                                              ),
+                                            );
+                                          } else {
+                                            final snackBar = SnackBar(
+                                                content: Text("error"));
+                                            scaffoldKey.currentState
+                                                ?.showSnackBar(snackBar);
+                                            print("unsuccessful");
+                                          }
+                                        },
+                                        height: 50,
+                                        minWidth: 200,
+                                        color: Color(0xff8ed1c0),
+                                        child: Text(
+                                          "Register",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 20)
+                                  ])
+                                ])))
+                      ]),
+                ))));
